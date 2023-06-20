@@ -122,10 +122,10 @@ for ii = 1:nInt
 end
 
 setPDFRes(fig)
-saveas(fig,'Figures\PCA_Component.pdf')
-saveas(fig,'Figures\PCA_Component.png')
+saveas(fig,'Figures\Links\Figure12A_PCA_Component.pdf')
+% saveas(fig,'Figures\PCA_Component.png')
 
-%% Figure 12B,C:
+%% Figure 12B,C,D:
 
 detLvls = [110:10:170];
 LineWidth = 1;
@@ -133,7 +133,8 @@ MarkerSize = 3;
 FontSize = 8;
 sIdx = ismember(SimRes.thr, detLvls) & abs(SimRes.NDTime - 0.15) < 0.005 & strcmpi(SimRes.condition,'baseline');
 sIdx = find(sIdx)';
-sColors = 0.9*hsv(length(sIdx));
+sColors = 0.9*hsv(length(sIdx)+1);
+sColors(3,:) = []; % manual hack for hard to distinguish green colors
 bColors = gray(length(sIdx)+1);
 
 % Simulation results
@@ -196,7 +197,9 @@ end
 fIdx = [1,4];
 
 AMThrRange = [-20,0];
-for ii = 2%1:2 % intensity
+% for ii = 2%1:2 % intensity
+ii = 2;
+intStr = '60';
 % figure('Position',[300,200,600,600]);
 set(gcf,'defaultAxesColorOrder',[0,0,0; 0,0,0]);
 clearvars('ax','ax2');
@@ -204,7 +207,7 @@ for scnt = 1:length(sIdx)%ss-10:10:ss+50
     sss = sIdx(scnt);
     dP_SIM = SimRes.dP_SIM{sss};
     
-    Thr_SIM = SimRes.(['Thr_SIM_',num2str(uInt(ii))]){sss};
+    Thr_SIM = SimRes.(['Thr_SIM_',intStr]){sss};
     Thr_SIM = Thr_SIM(fIdx,:);
     for ff = 1:2 % frequency
         fff = fIdx(ff);
@@ -217,7 +220,7 @@ for scnt = 1:length(sIdx)%ss-10:10:ss+50
         
         set(gca,'XTick',1:5,'XTickLabel',uMD);
         
-        yline(1,'--');
+        yline(1,'--','LineWidth',1.5);
         
         title([num2str(uMF(ff),'%dHz')]);%, ' ', num2str(uInt(ii),'%ddB')])
         ylabel('d''')
@@ -253,116 +256,10 @@ end
             'MarkerSize',MarkerSize); %'MarkerFaceColor','k'
     end
 set([ax,ax2],'FontSize',FontSize);
-end
+% end
 setPDFRes(fig)
-saveas(fig,'Figures\PCA_SIMRes.pdf')
-saveas(fig,'Figures\PCA_SIMRes.png')
-
-%%
-[M_all,uThr,uNDTimes] = goodnessHeatmap(SimRes,{'thr','NDTime'},'CDFDiff');
-[M_Base60,uThr,uNDTimes] = goodnessHeatmap(SimRes,{'thr','NDTime'},'CDFDiff_Base60');
-[M_Sal60,uThr,uNDTimes] = goodnessHeatmap(SimRes,{'thr','NDTime'},'CDFDiff_Sal60');
-[M_Base45,uThr,uNDTimes] = goodnessHeatmap(SimRes,{'thr','NDTime'},'CDFDiff_Base45');
-[M_Sal45,uThr,uNDTimes] = goodnessHeatmap(SimRes,{'thr','NDTime'},'CDFDiff_Sal45');
-
-cRange = [0.10,0.65];
-figure('Position',[10,300,1300,500]);
-nCols = 5;
-ii = 1;
-ax(ii) = subplot(1,nCols,ii);
-imagesc(uNDTimes,uThr,M_all,'AlphaData',~isnan(M_all),cRange);hold on;
-[~,minIdx] = min(M_all,[],'all','linear');
-[minY,minX] = ind2sub(size(M_all),minIdx);
-scatter(uNDTimes(minX),uThr(minY),'ow');
-colormap(flipud(jet));
-title('CDF Diff overall');colorbar;
-ylabel('Detection level (a.u.)');
-xlabel('Non-detection time (s)')
-ii = 2;
-ax(ii) = subplot(1,nCols,ii);
-imagesc(uNDTimes,uThr,M_Base60,'AlphaData',~isnan(M_Base60),cRange);hold on;
-[~,minIdx] = min(M_Base60,[],'all','linear');
-[minY,minX] = ind2sub(size(M_Base60),minIdx);
-scatter(uNDTimes(minX),uThr(minY),'ow');
-colormap(flipud(jet));
-title('Baseline 60 dB');colorbar;
-xlabel('Non-detection time (s)')
-ii = 3;
-ax(ii) = subplot(1,nCols,ii);
-imagesc(uNDTimes,uThr,M_Sal60,'AlphaData',~isnan(M_Sal60),cRange);hold on;
-[~,minIdx] = min(M_Sal60,[],'all','linear');
-[minY,minX] = ind2sub(size(M_Sal60),minIdx);
-scatter(uNDTimes(minX),uThr(minY),'ow');
-colormap(flipud(jet));
-title('Salicylate 60 dB');colorbar;
-xlabel('Non-detection time (s)')
-
-ii = 4;
-ax(ii) = subplot(1,nCols,ii);
-imagesc(uNDTimes,uThr,M_Base45,'AlphaData',~isnan(M_Base45),cRange);hold on;
-[~,minIdx] = min(M_Base45,[],'all','linear');
-[minY,minX] = ind2sub(size(M_Base45),minIdx);
-scatter(uNDTimes(minX),uThr(minY),'ow');
-colormap(flipud(jet));
-title('Baseline 45 dB');colorbar;
-xlabel('Non-detection time (s)')
-ii = 5;
-ax(ii) = subplot(1,nCols,ii);
-imagesc(uNDTimes,uThr,M_Sal45,'AlphaData',~isnan(M_Sal45),cRange);hold on;
-[~,minIdx] = min(M_Sal45,[],'all','linear');
-[minY,minX] = ind2sub(size(M_Sal45),minIdx);
-scatter(uNDTimes(minX),uThr(minY),'ow');
-colormap(flipud(jet));
-title('Salicylate 45 dB');colorbar;
-xlabel('Non-detection time (s)')
-
-set(ax,'YDir','normal')
-for ii = 1:5
-scatter(ax(ii),repmat(0.15,1,length(detLvls)),detLvls,20,sColors,'filled','MarkerEdgeColor','k');
-end
-%%
-
-[M_Thr45Base16,uThr,uNDTimes] = goodnessHeatmap(SimRes,{'thr','NDTime'},'Thr_SIM_45',1);
-[M_Thr45Sal16,uThr,uNDTimes] = goodnessHeatmap(SimRes,{'thr','NDTime'},'Thr_SIM_45',5);
-[M_Thr60Base16,uThr,uNDTimes] = goodnessHeatmap(SimRes,{'thr','NDTime'},'Thr_SIM_60',1);
-[M_Thr60Sal16,uThr,uNDTimes] = goodnessHeatmap(SimRes,{'thr','NDTime'},'Thr_SIM_60',5);
-
-
-[M_Thr45Base512,uThr,uNDTimes] = goodnessHeatmap(SimRes,{'thr','NDTime'},'Thr_SIM_45',4);
-[M_Thr45Sal512,uThr,uNDTimes] = goodnessHeatmap(SimRes,{'thr','NDTime'},'Thr_SIM_45',8);
-[M_Thr60Base512,uThr,uNDTimes] = goodnessHeatmap(SimRes,{'thr','NDTime'},'Thr_SIM_60',4);
-[M_Thr60Sal512,uThr,uNDTimes] = goodnessHeatmap(SimRes,{'thr','NDTime'},'Thr_SIM_60',8);
-
-%%
-cMax = 15;
-figure;
-ax = [];
-ii = 1;
-ax(ii) = subplot(2,4,ii);
-imagesc(uNDTimes,uThr,M_Thr45Base16,'AlphaData',~isnan(M_Thr60Base16),[-cMax,0])
-ii = 2;
-ax(ii) = subplot(2,4,ii);
-imagesc(uNDTimes,uThr,M_Thr45Sal16,'AlphaData',~isnan(M_Thr45Sal16),[-cMax,0])
-ii = 3;
-ax(ii) = subplot(2,4,ii);
-imagesc(uNDTimes,uThr,M_Thr60Base16,'AlphaData',~isnan(M_Thr60Base16),[-cMax,0])
-ii = 4;
-ax(ii) = subplot(2,4,ii);
-imagesc(uNDTimes,uThr,M_Thr60Sal16,'AlphaData',~isnan(M_Thr60Sal16),[-cMax,0])
-
-ii = 5;
-ax(ii) = subplot(2,4,ii);
-imagesc(uNDTimes,uThr,M_Thr45Base512,'AlphaData',~isnan(M_Thr45Base512),[-cMax,0])
-ii = 6;
-ax(ii) = subplot(2,4,ii);
-imagesc(uNDTimes,uThr,M_Thr45Sal512,'AlphaData',~isnan(M_Thr45Sal512),[-cMax,0])
-ii = 7;
-ax(ii) = subplot(2,4,ii);
-imagesc(uNDTimes,uThr,M_Thr60Base512,'AlphaData',~isnan(M_Thr60Base512),[-cMax,0])
-ii = 8;
-ax(ii) = subplot(2,4,ii);
-imagesc(uNDTimes,uThr,M_Thr60Sal512,'AlphaData',~isnan(M_Thr60Sal512),[-cMax,0])
-set(ax,'YDir','normal')
+saveas(fig,'Figures\Links\Figure12B-D_PCA_SIMRes.pdf')
+% saveas(fig,'Figures\PCA_SIMRes.png')
 
 
 %% local functions
