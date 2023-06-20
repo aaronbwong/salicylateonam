@@ -1,0 +1,3 @@
+sex,count(animalid)
+female,7
+male,3
