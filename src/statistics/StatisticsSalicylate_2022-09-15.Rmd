@@ -1,0 +1,120 @@
+---
+title: "Salicylate Statistics"
+author: "Aaron Wong"
+date: "15 September, 2022"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+library(lme4)
+library(nlme)
+library(ggplot2)
+if(!require(here)){
+  install.packages("here")
+}
+library(plyr)
+if(!require(multcomp)){
+  install.packages("multcomp")
+}
+
+a2dB <- function(a) {
+  dB <- 20*log10(a)
+  return(dB)
+}
+
+```
+
+## Load Data
+
+```{r getdata}
+dat <- read.csv(here::here("gen/statistics/input/SalicylateThresholds.txt"),header=TRUE)
+str(dat)
+xtabs(~ batch + subject, dat, sparse = TRUE)
+
+threshold <- dat$threshold
+frequency <- factor(dat$frequency)
+frequency <- relevel(frequency,ref="16") # set reference to 16 Hz
+intensity <- factor(dat$intensity)
+intensity <- relevel(intensity,ref="60") # set reference to 60 dB
+condition <- factor(dat$condition)
+batch <- factor(dat$batch)
+subject <- factor(dat$subject)
+
+```
+
+
+##  Linear Mixed Effect Model
+
+The following codes run a linear mixed effect model over the data. We will use the `lme` function from the `nlme` package which gives us p-values
+
+```{r linear mixed model 2, echo=TRUE}
+frequency <- relevel(frequency,ref="16") # set reference to 16 Hz
+intensity <- relevel(intensity,ref="60") # set reference to 60 dB
+SalLMM0 <- lme(threshold ~ intensity * frequency * condition, 
+            random = ~ 1|batch/subject)
+summary(SalLMM0)   # show results of linear model fit
+```
+```{r echo=FALSE}
+#anova(SalLMM0)
+#anova(SalLMM0, Terms = c("frequency", "frequency:condition"))
+#anova(SalLMM0, Terms = c("condition", "frequency:condition"))
+
+#plot(SalLMM0)
+
+
+```
+From the results above one can see that `conditionSalicylate` has a value of -5.01 +/- 1.28 (dB) and a p-value of 0.0003, while `conditionWashout` has a value of 1.00 +/- 1.28 (dB) and a p-value of 0.43.
+
+The following re-run the Linear Mixed-Effect Model using 512 Hz as the reference modulation frequency. Thus the coefficient `conditionSalicylate` directly test whether 512 Hz salicylate at 60 dB is significantly different from baseline, and `conditionWashout` directly test that for washout vs baseline.
+
+```{r releveling}
+frequency <- relevel(frequency,ref="512") # set reference to 16 Hz
+intensity <- relevel(intensity,ref="60") # set reference to 60 dB
+
+SalLMM1 <- lme(threshold ~ intensity * frequency * condition, 
+            random = ~ 1|batch/subject)
+summary(SalLMM1)   # show results of linear model fit
+
+```
+From the results above one can see that `conditionSalicylate` has a value of -3.36 +/- 1.28 (dB) and a p-value of 0.011, while `conditionWashout` has a value of -0.28 +/- 1.28 (dB) and a p-value of 0.82.
+
+### General Linear Hypothesis Testing
+
+To create a more general environment for hypothesis testing, we will create an LMM `SalLMM2` using the package ``lme4`. This package does not give p-values when passed to `summary()`, but allows specific hypotheses to be tested using the package `glht` (General Linear Hypothesis Testing). We will relevel the frequency to use 16 Hz as the reference.
+
+```{r linear mixed model, echo=TRUE}
+frequency <- relevel(frequency,ref="16") # set reference to 16 Hz
+intensity <- relevel(intensity,ref="60") # set reference to 60 dB
+SalLMM2 <- lme4::lmer(threshold ~ frequency*intensity*condition + (1|batch/subject))
+```
+
+The following lines specify the hypotheses to be tested. Namely, we will test the following
+
+1. Salicylate effect at 16 Hz, 60 dB
+2. Salicylate effect at 512 Hz, 60 dB
+3. Washout effect at 16 Hz, 60 dB
+4. Washout effect at 512 Hz, 60 dB
+5. Iceberg effect at 16 Hz
+6. Iceberg effect at 512 Hz
+
+```{r specific hypotheses}
+tests <- c("conditionSalicylate = 0", # Salicylate effect for 16 Hz, 60 dB (ref-levels)
+          "conditionSalicylate + frequency512:conditionSalicylate = 0", # Salicylate effect for 512 Hz, 60 dB
+          "conditionWashout = 0", # Washout effect for 16 Hz, 60 dB (ref-levels)
+          "conditionWashout + frequency512:conditionWashout = 0", # Washout effect for 512 Hz, 60 dB
+          "conditionSalicylate - intensity45 = 0", #iceberg for 16Hz
+          "conditionSalicylate + frequency512:conditionSalicylate - intensity45 - frequency512:intensity45 = 0") #iceberg for 512Hz
+summary(glht(SalLMM2, linfct = tests))
+```
+#### Salicylate effects
+Hypotheses 1,2 (salicylate effects) are significant, indicating that salicylate changes the AM threshold for both frequencies (at 60 dB).
+
+#### Washout effects
+Hypotheses 3,4 (Washout effects) are not significant, indicating that the AM threshold at washout period are not different from baseline (at 60 dB).
+
+#### Iceberg effects
+Hypothesis 5 compares the 16 Hz 60 dB salicylate to 16 Hz 45 dB baseline. On average this gives a -5.94 +/- 1.28 dB improvement in AM thresholdm, which is statistically significant, indicating that a 15 dB threshold shift cannot compensate for the change in AM threshold at 16 Hz upon salicylate. 
+
+Hypothesis 6 compares the 512 Hz 60 dB salicylate to 512Hz 45 dB baseline. On average this gives a -2.55 +/- 1.28 dB improvement in AM threshold, which is slightly less than the -3.36 dB improvement when looking at 60 dB alone (Hypothesis 2). However, this was not statistically significant, suggesting that the AM threshold shift at 512 Hz could potentially be compensated by a 15 dB intensity threshold shift.
