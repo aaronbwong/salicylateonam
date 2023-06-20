@@ -348,6 +348,6 @@ function setCGFAxis(h,xdir)
     set(h,'xtick',1:5:M+1,'xticklabel',tau(1:5:M+1));
     xlabel('Tau (ms)');
     ylabel('Phi (oct)');
-    rectangle('Position',[0.5,N+0.5,1,1],'EdgeColor',[.5 .5 .5],'FaceColor',[.5 .5 .5],'LineWidth',0.05)
+%     rectangle('Position',[0.5,N+0.5,1,1],'EdgeColor',[.5 .5 .5],'FaceColor',[.5 .5 .5],'LineWidth',0.05)
 %     rectangle('Position',[0.5,N+0.5,1,1],'EdgeColor','none','FaceColor',[.5 .5 .5])
 end

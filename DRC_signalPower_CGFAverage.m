@@ -165,7 +165,7 @@ end
 
 %% Fig 10A context improvement predictive power for vs STRF
 fig = figure; LineWidth = 1;
-fig.Position = [150,425,350,350];
+fig.Position = [150,425,400,400];
 sc(1) = scatter(data.strfnpp(excSel & incSel)*100,data.ctxtnpp(excSel & incSel)./data.strfnpp(excSel & incSel),...
     'o','MarkerEdgeColor',[0.7,0.7,0.7],...
     'LineWidth',LineWidth); hold on;
@@ -252,19 +252,19 @@ cgfmask(N+1,1) = 0;
 cMaxAll = max([abs(avgBaseCGF),abs(avgSalCGF)],[],'all');
 subplot(1,2,1)
 imagesc(avgBaseCGF', ...
-    ...'AlphaData',cgfmask, ...
+    'AlphaData',cgfmask, ...
     [-cMaxAll,cMaxAll]);setCGFAxis(gca,'reverse')
 colorbar; 
 title('Baseline');
-%     set(gca,'Color',[.5,.5,.5]);
+set(gca,'Color',[1,1,1]);
 
 subplot(1,2,2)
 imagesc(avgSalCGF', ...
-    ...'AlphaData',cgfmask, ...
+    'AlphaData',cgfmask, ...
     [-cMaxAll,cMaxAll]);setCGFAxis(gca,'reverse')
 colorbar;
 title('Salicylate');
-%     set(gca,'Color',[.5,.5,.5]);
+set(gca,'Color',[1,1,1]);
 
 fig.Renderer = 'painter';
 fig.PaperUnits = 'inches';
@@ -341,6 +341,6 @@ function setCGFAxis(h,xdir)
     set(h,'xtick',1:5:M+1,'xticklabel',tau(1:5:M+1));
     xlabel('Tau (ms)');
     ylabel('Phi (oct)');
-    rectangle('Position',[0.5,N+0.5,1,1],'EdgeColor',[.5 .5 .5],'FaceColor',[.5 .5 .5],'LineWidth',0.05)
+%     rectangle('Position',[0.5,N+0.5,1,1],'EdgeColor',[.5 .5 .5],'FaceColor',[.5 .5 .5],'LineWidth',0.05)
 %     rectangle('Position',[0.5,N+0.5,1,1],'EdgeColor','none','FaceColor',[.5 .5 .5])
 end
