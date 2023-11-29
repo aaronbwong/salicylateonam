@@ -5,14 +5,14 @@ addpath('.\functions\');
 salColor = [.7,.7,0];
 baseColor = [0,0,0];
 
-DRC_load_data;
+[data,pairTable] = DRC_load_data;
 
 %%
 
-allBaseSTRF = cat(3,data.STRF{basePairSel});
-allBasePRF = cat(3,data.PRF{basePairSel});
-allBaseCGF = cat(3,data.CGF{basePairSel});
-allSalSTRF = cat(3,data.STRF{salPairSel});
+allBaseSTRF = cat(3,data.STRF{pairTable.basePairSel});
+allBasePRF = cat(3,data.PRF{pairTable.basePairSel});
+allBaseCGF = cat(3,data.CGF{pairTable.basePairSel});
+allSalSTRF = cat(3,data.STRF{pairTable.salPairSel});
 
 
 nClu = size(allBaseSTRF,3);
@@ -179,6 +179,7 @@ for u = 1:nClu
 end
 
 %%
+FontSize = 12;
 fig = figure;
 fig.Position = [710,100,600,200];
 % plot(mean(Tuning_Base./max(Tuning_Base),2,'omitnan'),'-sk','MarkerFaceColor','k'); hold on;
@@ -195,6 +196,7 @@ xlabel('Freq. re. BF_{base} (oct)')
 set(gca,'FontSize',FontSize);
 legend({'baseline','salicylate'},'location','best')
 %%
+FontSize = 12;
 fig = figure;
 fig.Position = [710,100,600,200];
 % plot(mean(Tuning_Base./max(Tuning_Base),2,'omitnan'),'-sk','MarkerFaceColor','k'); hold on;

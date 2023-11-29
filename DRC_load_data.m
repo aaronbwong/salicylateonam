@@ -148,6 +148,9 @@ pairTable.salImpr = pairTable.ctxtnpp_sal - pairTable.strfnpp_sal;
 pairTable.c_base = data.c_ctxt(basePairSel);
 pairTable.c_sal = data.c_ctxt(salPairSel);
 
+pairTable.basePairSel = find(basePairSel);
+pairTable.salPairSel = find(salPairSel);
+
 % %% Similarity of PRF and CGF upon salicylate
 nClu = size(pairTable,1);
 for ii = 1:nClu
