@@ -115,16 +115,19 @@ end
 
 
 % units*condition selections
-excSel = data.set == 4 & (data.salDataSet == 0 ...
+baseOnly = data.set == 4 & (data.salDataSet == 0 ...
     | data.mouse == 25 | data.mouse == 74); %baseline of units without salicylate
 baseSel =  data.set == 4 & data.salDataSet == 1 ...
     & data.mouse ~= 25 & data.mouse ~= 74 ; %baseline of units with salicylate
 salSel = data.set == 10& data.salDataSet == 1; %salicylate 
 furSel = data.set == 10& data.salDataSet == 0; %furosemide 
 
+data.baseOnly = baseOnly;
+
 % enough signal power
 nSigma = 2;
 incSel = data.sp > nSigma* data.err;
+data.sigSignal = incSel;
 
 % select relevant units
 baseTable = data(baseSel & incSel,{'mouse','cids'}); % units with acceptable baseline recording

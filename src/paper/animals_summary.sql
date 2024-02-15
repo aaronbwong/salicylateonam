@@ -36,3 +36,8 @@ ephysid IN
 ('M25', 'M26', 'M27', 'M29', 
  'M30', 'M42', 'M43', 
 'M71',  'M72', 'M74');
+
+-- [NOT IN DATABASE!!] animals used in imaging 
+SELECT animalid,sex,construct_name,dob,ephysid FROM mice.animals WHERE animalid IN 
+('15-MI13723-01',-- [NOT IN DATABASE!!] 
+'15-MI13723-02');-- [NOT IN DATABASE!!] 
