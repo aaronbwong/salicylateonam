@@ -1,3 +1,5 @@
+%% Figure 10 Van den Berg*, Wong* et al, 2024, iScience
+
 DataPathPCA = '.\Data\PCA_SIM\';
 DataPathSIM = '.\Data\PCA_SIM\';
 DataPathNeuro = '.\Data\Neuro\';
@@ -50,7 +52,7 @@ baseTime = [0.8,1];
 bIdx = tt > baseTime(1) & tt < baseTime(2); % time index for baseline
 PCs = PCs - mean(PCs(:,bIdx),2);
 
-%% Figure 12A: PCA results
+%% Figure 10A: PCA results
 
 Periods = {'Baseline','Salicylate','Washout'};
 tOffset = 1; % zero-th point of time axis
@@ -122,10 +124,10 @@ for ii = 1:nInt
 end
 
 setPDFRes(fig)
-saveas(fig,'Figures\Links\Figure12A_PCA_Component.pdf')
+saveas(fig,'Figures\Links\Figure10A_PCA_Component.pdf')
 % saveas(fig,'Figures\PCA_Component.png')
 
-%% Figure 12B,C,D:
+%% Figure 10B,C,D:
 
 detLvls = [110:10:170];
 LineWidth = 1;
@@ -239,9 +241,10 @@ for scnt = 1:length(sIdx)%ss-10:10:ss+50
 %         end
 % %         if(ff == 2); yticklabels([]);endNonDete
         ylim(AMThrRange);
-%         set(ax2(ff),'YDir','reverse')
+        set(ax2(ff),'YDir','reverse')
         yyaxis(ax2(ff),'right');
         set(ax2(ff),'YScale','log');%,'YDir','reverse')
+        set(ax2(ff),'YDir','reverse')
         ylim(ax2(ff),dB2a(AMThrRange));yticks(uMD);
 %         if(ff == 1); yticklabels([]);end
 %         if(ff == 2); 
@@ -258,7 +261,7 @@ end
 set([ax,ax2],'FontSize',FontSize);
 % end
 setPDFRes(fig)
-saveas(fig,'Figures\Links\Figure12B-D_PCA_SIMRes.pdf')
+saveas(fig,'Figures\Links\Figure10B-D_PCA_SIMRes.pdf')
 % saveas(fig,'Figures\PCA_SIMRes.png')
 
 

@@ -1,4 +1,4 @@
-%%
+%% Figure 7 of van den Berg*, Wong* et al, 2024, iScience
 
 addpath('.\functions\');
 
@@ -14,12 +14,17 @@ allBasePRF = cat(3,data.PRF{pairTable.basePairSel});
 allBaseCGF = cat(3,data.CGF{pairTable.basePairSel});
 allSalSTRF = cat(3,data.STRF{pairTable.salPairSel});
 
-
 nClu = size(allBaseSTRF,3);
 J = size(allBaseSTRF,1);
 K = size(allBaseSTRF,2);
 delay = 5*(0:J);
-%% Example units
+
+minFreq = 2000; maxFreq = 64000;
+Freq = logspace(log10(minFreq),log10(maxFreq),K);
+freq = Freq./1000;
+
+%% Figure 7A - Example units
+
 units = [find(pairTable.mouse == 30 & pairTable.cids == 5);...
         find(pairTable.mouse == 30 & pairTable.cids == 262);...
         find(pairTable.mouse == 30 & pairTable.cids == 93);...
@@ -27,8 +32,8 @@ units = [find(pairTable.mouse == 30 & pairTable.cids == 5);...
         ];
 
 fig = figure;
-fig.Position = [100,20,600,1000];
-FontSize = 16;
+fig.Position = [100,20,450, 1000];
+FontSize = 10;
 for uu = 1:length(units)
     strf = flip(allBaseSTRF(:,:,units(uu)))';
     strf_s = flip(allSalSTRF(:,:,units(uu)))';
@@ -47,6 +52,10 @@ for uu = 1:length(units)
     setPRFAxis(gca,'reverse')
     set(gca,'FontSize',FontSize)
 end
+
+setPDFRes(fig)
+saveas(fig,'Figures\Links\Figure7A_ExampleSTRFs.pdf')
+
 
 %% Extract best frequencies and best delays
 BFIdx_base = nan(nClu,1);
@@ -69,27 +78,32 @@ BestDels_base = delay(DelIdx_base)';
 BFs_sal = freq(BFIdx_sal)'*1000;
 BestDels_sal = delay(DelIdx_sal)';
 
-%% BF - Salicylate vs Baseline
+%% Figure 7B - BF - Salicylate vs Baseline
 fig = figure;
-fig.Position = [710,600,600,420];
+fig.Position = [710,200,600,420];
 
 [ax1,ax2,sc] = plotScatterChange(BFs_base,BFs_sal,1);
 xticks(ax1,freq(1:12:end)*1000);
 yticks(ax1,freq(1:12:end)*1000);
 xticklabels(ax1,freq(1:12:end));
 yticklabels(ax1,freq(1:12:end));
- xlim(ax1,[3e3,64e3]);
+ xlim(ax1,[3e3,64e3+10]);
 xlabel([ax1],'Best frequency - baseline (kHz)')
 ylabel([ax1],'Best frequency - salicylate (kHz)')
 
 axis(ax1,'square')
 yticks([ax1,ax2],freq(1:12:end)*1000); 
 yticklabels([ax1,ax2],freq(1:12:end));
-ylim([ax1,ax2],[3e3,64e3]);
+ylim([ax1,ax2],[3e3,64e3+1]);
 ylabel([ax2],'Best frequency (kHz)');
-xticks(ax2,1:2);xticklabels({'Base','Sal'});
+xticks(ax2,1:2);xticklabels({'Baseline','Salicylate'});
+set(ax2,'XTickLabelRotation',0);
 % set(ax2,'XTickLabelRotation',45);
 set([ax1,ax2],'FontSize',FontSize);
+
+setPDFRes(fig)
+saveas(fig,'Figures\Links\Figure7BC_BF.pdf')
+
 
 %% Descriptive statistics
 
@@ -124,7 +138,9 @@ ylabel([ax1],'max(w_{STRF}) - salicylate')
 axis(ax1,'square')
 
 ylabel([ax2],'max(w)');
-xticks(ax2,1:2);xticklabels({'Base','Sal'});
+
+xticks(ax2,1:2);xticklabels({'Baseline','Salicylate'});
+set(ax2,'XTickLabelRotation',0);
 set([ax1,ax2],'FontSize',FontSize);
 
 disp(['Mean change in w_{STRF}: ',...
@@ -136,6 +152,8 @@ disp(['Mean change in w_{STRF}: ',...
 [h,p,ci,stats] = ttest(maxW_sal,maxW_base);
 disp(['p = ',num2str(p)])
 
+setPDFRes(fig)
+saveas(fig,'Figures\Links\Figure7DE_maxW_STRF.pdf')
 
 %% BF centered 
 bandwidth = 12; % bins
@@ -178,27 +196,27 @@ for u = 1:nClu
     Tuning_Base2(TunRange,u) = allBaseSTRF(DelIdx_base(u),STRFRange,u);
 end
 
-%%
+% %%
+% FontSize = 12;
+% fig = figure;
+% fig.Position = [710,100,600,200];
+% % plot(mean(Tuning_Base./max(Tuning_Base),2,'omitnan'),'-sk','MarkerFaceColor','k'); hold on;
+% errorbar(mean(Tuning_Base./max(Tuning_Base),2,'omitnan'),...
+%     std(Tuning_Base./max(Tuning_Base)./sqrt(nClu),[],2,'omitnan'),...
+%     'MarkerFaceColor','k','Color',baseColor,'MarkerSize',6,'Marker','s'); hold on;
+% errorbar(mean(Tuning_Sal./max(Tuning_Sal),2,'omitnan'),...
+%     std(Tuning_Sal./max(Tuning_Sal)./sqrt(nClu),[],2,'omitnan'),...
+%     'MarkerFaceColor',salColor,'Color',salColor,'MarkerSize',6,'Marker','s'); hold on;
+% ylabel('Norm. w_{STRF}');
+% xticks(1:bandwidth/2:(2*bandwidth+1));
+% xticklabels([-bandwidth:bandwidth/2:bandwidth]./12);
+% xlabel('Freq. re. BF_{base} (oct)')
+% set(gca,'FontSize',FontSize);
+% legend({'baseline','salicylate'},'location','best')
+%% Figure 7F
 FontSize = 12;
 fig = figure;
-fig.Position = [710,100,600,200];
-% plot(mean(Tuning_Base./max(Tuning_Base),2,'omitnan'),'-sk','MarkerFaceColor','k'); hold on;
-errorbar(mean(Tuning_Base./max(Tuning_Base),2,'omitnan'),...
-    std(Tuning_Base./max(Tuning_Base)./sqrt(nClu),[],2,'omitnan'),...
-    'MarkerFaceColor','k','Color',baseColor,'MarkerSize',6,'Marker','s'); hold on;
-errorbar(mean(Tuning_Sal./max(Tuning_Sal),2,'omitnan'),...
-    std(Tuning_Sal./max(Tuning_Sal)./sqrt(nClu),[],2,'omitnan'),...
-    'MarkerFaceColor',salColor,'Color',salColor,'MarkerSize',6,'Marker','s'); hold on;
-ylabel('Norm. w_{STRF}');
-xticks(1:bandwidth/2:(2*bandwidth+1));
-xticklabels([-bandwidth:bandwidth/2:bandwidth]./12);
-xlabel('Freq. re. BF_{base} (oct)')
-set(gca,'FontSize',FontSize);
-legend({'baseline','salicylate'},'location','best')
-%%
-FontSize = 12;
-fig = figure;
-fig.Position = [710,100,600,200];
+fig.Position = [710,100,600,300];
 % plot(mean(Tuning_Base./max(Tuning_Base),2,'omitnan'),'-sk','MarkerFaceColor','k'); hold on;
 errorbar(mean(Tuning_Base./max(Tuning_Base),2,'omitnan'),...
     std(Tuning_Base./max(Tuning_Base)./sqrt(nClu),[],2,'omitnan'),...
@@ -212,6 +230,10 @@ xticklabels([-bandwidth:bandwidth/2:bandwidth]./12);
 xlabel('Freq. re. BF (oct)')
 set(gca,'FontSize',FontSize);
 legend({'baseline','salicylate'},'location','best')
+
+setPDFRes(fig)
+saveas(fig,'Figures\Links\Figure7F_AvgBandwidth.pdf')
+
 % %%
 % fig = figure;
 % fig.Position = [710,100,600,200];
@@ -231,10 +253,19 @@ legend({'baseline','salicylate'},'location','best')
 
 %% average Pearson correlation between STRF & PRF
 
-dd = data.rho(basePairSel | salPairSel);
+dd = data.rho(pairTable.basePairSel | pairTable.salPairSel);
 disp(['Mean: ',num2str(mean(dd))]);
 disp(['SD: ',num2str(std(dd))]);
 disp(['Range: ',num2str(min(dd)) ,' - ',num2str(max(dd))]);
+
+%% REVISION: excitation inhibition
+
+meanWeightBase = squeeze(mean(allBaseSTRF,[1,2]));
+meanWeightSal =  squeeze(mean(allSalSTRF,[1,2]));
+
+excUnits = meanWeightBase > 0;
+inhUnits = meanWeightBase < 0;
+
 
 
 %% LOCAL Functions

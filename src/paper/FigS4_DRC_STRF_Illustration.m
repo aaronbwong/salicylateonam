@@ -1,4 +1,5 @@
-% This script re-creates Figure 8 from van den Berg, Wong, Houtak, Bremen, Williamson, Borst(2023)
+% This script re-creates Figure S4 from van den Berg*, Wong*, Houtak,
+% Williamson, Borst (2024) iScience
 
 load('.\Data\Neuro\DRC\M30_S04_DRC.mat','Stm') % stimulus matrix
 load('.\Data\Neuro\DRC\M30_S04_DRC_SpkT.mat','SpkT') % Trial-aligned spike times
@@ -91,7 +92,7 @@ ylim([0,2]);
 fig.Renderer = 'painter';
 fig.PaperUnits = 'inches';
 fig.PaperSize = fig.Position(3:4)./96; %96 dpi
-saveas(fig,'.\Figures\Links\Figure8A-D.pdf')
+saveas(fig,'.\Figures\Links\FigS4A-D.pdf')
 
 
 % %% Stimulus scaling (input non-linearity)
@@ -181,7 +182,7 @@ end
 fig.Renderer = 'painter';
 fig.PaperUnits = 'inches';
 fig.PaperSize = fig.Position(3:4)./96; %96 dpi
-saveas(fig,'.\Figures\Links\Figure8E-J.pdf')
+saveas(fig,'.\Figures\Links\FigS4E-J.pdf')
 %% functions
 
 function [Snd,Pul] = genDRC(TimeStep,freqs,Onset,Durs,Mask,Fs,Spk,Gain,Ref)

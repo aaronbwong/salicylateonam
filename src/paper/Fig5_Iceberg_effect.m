@@ -55,16 +55,17 @@ for f = 1:4
     xlim(a,[0 1]); ylim(a,[0 1]);
     xticks(a,[0 0.5 1]); yticks(a,[0.5 1]);
 
-    if f==4
-        leg = legend(h,'0.06','0.125','0.25','0.5','1','Location','southeast','FontSize',12);
-        Tleg = title(leg,'Mod. depth','FontName','Arial','FontSize',12);
-        leg.Title.NodeChildren.Position = [0.5 0.9 0];
-
-    end
 
     axprop(a,14);
     cnt = cnt+1; tilecnt = tilecnt +1;
     title([num2str(Mf(f)) ' Hz'],'FontName','Arial','FontSize',16);
+
+    if f==4
+        leg = legend(h,'0.06','0.125','0.25','0.5','1','Location','southeast','FontSize',12);
+        Tleg = title(leg,'Mod. depth','FontName','Arial','FontSize',12);
+        leg.Title.NodeChildren.Position = [0.5 0.9 0];
+        leg.Position = [0.77,0.43,0.1184,0.1231];
+    end
 end
 
 
@@ -174,7 +175,11 @@ xlim(a,[0.25 4.9]);
 An5 = annotation('textbox',MPlotLabels(5,:),'EdgeColor','none','String',"E",'FontSize',20,'FontName','Arial','FontWeight','bold');
 An6 = annotation('textbox',MPlotLabels(6,:),'EdgeColor','none','String',"F",'FontSize',20,'FontName','Arial','FontWeight','bold');
 
-saveas(F,[FigPath '\FigS5AtoF_population_iceberg_effect.pdf']);
+F.Renderer = 'painter';
+F.PaperUnits = 'inches';
+F.Units = 'pixels';
+F.PaperSize = F.Position(3:4)./96; %96 dpi
+saveas(F,[FigPath '\Fig5_population_iceberg_effect.pdf']);
 
 %--Local functions--%
 function axprop(ax,fontsz,tickangle)

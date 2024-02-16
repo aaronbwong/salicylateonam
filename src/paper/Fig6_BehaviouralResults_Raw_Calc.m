@@ -1,5 +1,6 @@
-%% Fig4A-D: plot HR/FA rates 
-clear; clc; close all;
+%% Fig6A-D: plot HR/FA rates 
+clearvars; clc; close all;
+saveFigs = 1;
 addpath('.\functions\');
 addpath(genpath('.\src\'));
 datapaths;
@@ -55,7 +56,7 @@ for i=[2,1]
 %         xlabel(a,'Modulation depth');
 %         ylabel(a,'Mean response delay (s)');
         axprop(a,12);
-        title([num2str(UInt(i)) ' dB - ' num2str(UMf(f)) ' Hz']);
+        title([num2str(UInt(i)) ' dB SPL - ' num2str(UMf(f)) ' Hz']);
 
         cnt = cnt +1;
     end
@@ -69,10 +70,10 @@ An2 = annotation('textbox',MPlotLabels(2,:),'EdgeColor','none','String',"B",'Fon
 An3 = annotation('textbox',MPlotLabels(3,:),'EdgeColor','none','String',"C",'FontSize',20,'FontName','Arial');
 An4 = annotation('textbox',MPlotLabels(4,:),'EdgeColor','none','String',"D",'FontSize',20,'FontName','Arial');
 
-saveas(F,[FigPath,'\Fig4AtoD_hitrate.pdf']);
+if saveFigs; saveas(F,[FigPath,'\Fig6AtoD_hitrate.pdf']);end
 
-%% Fig4E-H: response latencies
-clearvars; clc; close all;
+%% Fig6E-H: response latencies
+clearvars('-except','saveFigs'); clc; close all;
 datapaths;
 load([BehPath,'\SalicylateBehaviorData.mat']);
 
@@ -100,7 +101,7 @@ tiledlayout(2,2);
 cnt = 1;
 T = RespLatTable;
 
-
+maxLat = 4;
 
 for i=[2,1]
     for f=1:NMf
@@ -113,10 +114,16 @@ for i=[2,1]
                 sel  = T.Intensity == UInt(i) & T.Catch == 1 & strcmp(T.Mouse,mice{k,1}) & strcmp(T.condition,Periods{1,p});
                 RL = T.RespDelay(sel); RL = RL{1,1}; RL = RL(~isnan(RL));
                 C(1,k) = mean(RL);
+                T.meanRespDelay(sel) = C(1,k);
+                RL = T.RespDelay(sel); RL = RL{1,1}; RL(isnan(RL)) = maxLat;
+                T.medianRespDelay(sel) = median(RL);
                 for m=1:NMd
                     sel = T.Intensity == UInt(i) & T.ModFreq == UMf(f) & T.ModDepth == UMd(m) & T.Catch == 0 & strcmp(T.Mouse,mice{k,1}) & strcmp(T.condition,Periods{1,p});
                     RL = T.RespDelay(sel); RL = RL{1,1}; RL = RL(~isnan(RL));
                     V(m,k) = mean(RL);
+                    T.meanRespDelay(sel) = V(m,k);
+                    RL = T.RespDelay(sel); RL = RL{1,1}; RL(isnan(RL)) = maxLat;
+                    T.medianRespDelay(sel) = median(RL);
                 end
 
 %                 plot(a,UMd,V(:,k),'-','Color',Col(p,:));
@@ -139,7 +146,7 @@ for i=[2,1]
         a.YLim = [0 1.3];
         a.YTick = [0 0.5 1];
         axprop(a,12);
-        title([num2str(UInt(i)) ' dB - ' num2str(UMf(f)) ' Hz']);
+        title([num2str(UInt(i)) ' dB SPL - ' num2str(UMf(f)) ' Hz']);
 
         cnt = cnt +1;
     end
@@ -153,8 +160,20 @@ An2 = annotation('textbox',MPlotLabels(2,:),'EdgeColor','none','String',"F",'Fon
 An3 = annotation('textbox',MPlotLabels(3,:),'EdgeColor','none','String',"G",'FontSize',20,'FontName','Arial');
 An4 = annotation('textbox',MPlotLabels(4,:),'EdgeColor','none','String',"H",'FontSize',20,'FontName','Arial');
 
-saveas(F,[FigPath,'\Fig4EtoH_responsedelay.pdf']);
-%% Fig4legend
+subject = T.Mouse;
+batch = nan(size(subject));
+batch(ismember(subject,{'16506-02','16506-03'})) = 1;
+batch(ismember(subject,{'17966-03','17966-04'})) = 2;
+batch(ismember(subject,{'10996-01','10996-02'})) = 3;
+T.frequency = T.ModFreq;
+T.modDepth = T.ModDepth;
+T.intensity = T.Intensity;
+T.subject = subject;
+T.batch = batch;
+writetable(T,'SalicylateMeanLatencyTable.csv')
+
+if saveFigs;saveas(F,[FigPath,'\Fig6EtoH_responsedelay.pdf']);end
+%% Fig6legend
 close all;
 F = figure('Position',[100,100,238,197]);
 a= gca;
@@ -168,10 +187,10 @@ L = legend(Periods,'location','best','FontSize',14);
 ylim(a,[5 10]);
 a.XColor = 'none'; a.YColor = 'none'; a.Color = 'none';
 setPDFRes(F);
-saveas(F,[FigPath,'\Fig4legend.pdf'])
+if saveFigs;saveas(F,[FigPath,'\Fig6legend.pdf']);end
 
-%% Fig4I-L plot dPrime 
-clearvars; clc; close all;
+%% Fig6I-L plot dPrime 
+clearvars('-except','saveFigs'); clc; close all;
 datapaths;
 load([BehPath,'\SalicylateBehaviorData.mat']);
 UMd = uMD; NMd = length(UMd); UMf = uMF; NMf = length(UMf); UInt = uInt; NInt = length(UInt);
@@ -214,7 +233,7 @@ for i=[2 1]
         a.YTick = [0 1 2 3 4];
       
         axprop(a,12);
-        title([num2str(UInt(i)) ' dB - ' num2str(UMf(f)) ' Hz']);
+        title([num2str(UInt(i)) ' dB SPL - ' num2str(UMf(f)) ' Hz']);
         cnt = cnt +1;
 
 
@@ -229,9 +248,9 @@ An2 = annotation('textbox',MPlotLabels(2,:),'EdgeColor','none','String',"J",'Fon
 An3 = annotation('textbox',MPlotLabels(3,:),'EdgeColor','none','String',"K",'FontSize',20,'FontName','Arial');
 An4 = annotation('textbox',MPlotLabels(4,:),'EdgeColor','none','String',"L",'FontSize',20,'FontName','Arial');
 
-saveas(F,[FigPath,'\Fig4ItoL_dPrime.pdf']);
-%% Fig4M-P: Thresholds
-clear; clc; close all;
+if saveFigs;saveas(F,[FigPath,'\Fig6ItoL_dPrime.pdf']);end
+%% Fig6M-P: Thresholds
+clearvars('-except','saveFigs'); clc; close all;
 datapaths;
 load([BehPath,'\SalicylateBehaviorData.mat']);
 
@@ -286,7 +305,7 @@ for i=[2 1]
         a.YLim = [-18 0];
         a.YTick = [-25 -20 -15 -10 -5 0];
         axprop(a,12);
-        title([num2str(UInt(i)) ' dB - ' num2str(UMf(f)) ' Hz']);
+        title([num2str(UInt(i)) ' dB SPL - ' num2str(UMf(f)) ' Hz']);
 
         cnt = cnt +1;
     end
@@ -300,7 +319,7 @@ An2 = annotation('textbox',MPlotLabels(2,:),'EdgeColor','none','String',"N",'Fon
 An3 = annotation('textbox',MPlotLabels(3,:),'EdgeColor','none','String',"O",'FontSize',20,'FontName','Arial');
 An4 = annotation('textbox',MPlotLabels(4,:),'EdgeColor','none','String',"P",'FontSize',20,'FontName','Arial');
 
-saveas(F,[FigPath,'\Fig4MtoP_thresholds.pdf']);
+if saveFigs;saveas(F,[FigPath,'\Fig6MtoP_thresholds.pdf']);end
 
 
 %--Local functions--%

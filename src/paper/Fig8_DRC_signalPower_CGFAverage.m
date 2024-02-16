@@ -23,7 +23,7 @@ sigSignal = data.sigSignal;
 basePairSel = pairTable.basePairSel;
 salPairSel = pairTable.salPairSel;
 
-%% Fig 10A context improvement predictive power for vs STRF
+%% Fig 8A context improvement predictive power for vs STRF
 
 
 fig = figure; LineWidth = 1;
@@ -54,7 +54,7 @@ axis square
 fig.Renderer = 'painter';
 fig.PaperUnits = 'inches';
 fig.PaperSize = fig.Position(3:4)./96; %96 dpi
-saveas(gcf,'Figures\Links\Figure10A.pdf');
+saveas(gcf,'Figures\Links\Figure8A.pdf');
 
 % 
 % fig = figure; LineWidth = 1;
@@ -107,7 +107,7 @@ allDifCGF_lin = allDifCGF_lin - mean(allDifCGF_lin);
 allDifCGF_lin = allDifCGF_lin ./ std(allDifCGF_lin);
 [coeffDif, ~, ~, ~, explainedDif] = pca(allDifCGF_lin');
 
-%% Fig 10B: average CGF figures
+%% Fig 8B: average CGF figures
 fig = figure('Position',[475,520,600,250]); colormap(jet)
 cgfmask = ones(2*N+1,M+1);
 cgfmask(N+1,1) = 0;
@@ -131,13 +131,13 @@ set(gca,'Color',[1,1,1]);
 fig.Renderer = 'painter';
 fig.PaperUnits = 'inches';
 fig.PaperSize = fig.Position(3:4)./96; %96 dpi
-saveas(fig,'Figures\Links\Figure10B.pdf');
+saveas(fig,'Figures\Links\Figure8B.pdf');
 %
-%% Fig 10C-D: collapsed CGF
+%% Fig 8C-D: collapsed CGF
 
 yrange = [-0.21,0.03];
 
-nUnits = sum(basePairSel);
+nUnits = size(pairTable,1);
 colRange = 1;
 colBaseCGF = squeeze(mean(allBaseCGF(colRange,:,:),1));
 colBaseCGF(N+1,:) = nan;
@@ -178,7 +178,7 @@ set(gca,'FontSize',10);
 fig.Renderer = 'painter';
 fig.PaperUnits = 'inches';
 fig.PaperSize = fig.Position(3:4)./96; %96 dpi
-saveas(fig,'Figures\Links\Figure10CD.pdf');
+saveas(fig,'Figures\Links\Figure8CD.pdf');
 %% REVISION
 allBaseSTRF = cat(3,data.STRF{pairTable.basePairSel});
 allBasePRF = cat(3,data.PRF{pairTable.basePairSel});
@@ -343,7 +343,7 @@ set(gca,'FontSize',FontSize);
 lgd = legend({['baseline (exc; N = ',num2str(nExcUnits),')'],'salicylate (exc)', ['baseline (inh; N = ',num2str(nInhUnits),')'],'salicylate (inh)'},'Box','off', ...
     'location','best');
 
-%% require ExcInhAnalysis
+%% requires ExcInhAnalysis
 nUnits = size(pairTable,1);
 for ii = 1:nUnits
     idx = salUnits.mouse == pairTable.mouse(ii) & salUnits.cids == pairTable.cids(ii);

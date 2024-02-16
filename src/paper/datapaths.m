@@ -1,5 +1,7 @@
-FRAPath = 'W:\AW_repository_transfer\Maurits\FRA_analysis';
-PopPath = 'W:\AW_repository_transfer\Maurits\Population';
+FRAPath = '.\Data\Neuro\FRA_analysis';
+AMPath = '.\Data\Neuro\AMn_analysis';
+PopPath = '.\Data\Neuro';
 SumPath = '.\Data\Neuro';
+SpkPath = '.\Data\Neuro\Spks';
 BehPath = '.\Data\Behavior';
 FigPath = '.\Figures\Links';

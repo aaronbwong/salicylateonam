@@ -1,3 +1,5 @@
+%% Figure 9 Van den Berg*, Wong* et al, 2024, iScience
+
 Mice = [25,26,27,28,29,30,32,38,42,43,49,50,52,57,71,72,73,74];
 scales = {'pow','amp','dB40','dB2','dB','bin'};nScales = length(scales);
 scaleLbl = {'pow','amp','dB40','dB20','dB0','binary'};
@@ -145,7 +147,7 @@ pairTable.ctxtntpp_sal = data.ctxtntpp(salPairSel,:);
 % pairTable.c_base = data.c_ctxt(basePairSel);
 % pairTable.c_sal = data.c_ctxt(salPairSel);
 
-%% Figure 11 A-D 
+%% Figure 8 A-D 
 col = 3;
 row = 3;
 sc = 3; % 3: 'amp' scale
@@ -165,7 +167,7 @@ strfMean = errorbar(mean(data.strfnpp(basePairSel,sc)*100),... %x
          std(data.strfnpp(salPairSel,sc)*100/sqrt(nClu)),... %ypos
          std(data.strfnpp(basePairSel,sc)*100/sqrt(nClu)),... %xneg
          std(data.strfnpp(basePairSel,sc)*100/sqrt(nClu)),... %xpos
-         's','MarkerFaceColor',[.2,.2,.2],'Color',[.2,.2,.2],'MarkerSize',9,...
+         's','MarkerFaceColor',[.2,.2,.2],'Color',[.2,.2,.2],'MarkerSize',8,...
          'LineWidth',1);
 ctxtDots = plot(data.ctxtnpp(basePairSel,sc)*100,data.ctxtnpp(salPairSel,sc)*100,'o',...
     'Color',[0,0.5,0],'MarkerFaceColor','none','LineWidth',1.5,'MarkerSize',5);hold on;
@@ -175,7 +177,7 @@ ctxtMean = errorbar(mean(data.ctxtnpp(basePairSel,sc)*100),... %x
          std(data.ctxtnpp(salPairSel,sc)*100/sqrt(nClu)),... %ypos
          std(data.ctxtnpp(basePairSel,sc)*100/sqrt(nClu)),... %xneg
          std(data.ctxtnpp(basePairSel,sc)*100/sqrt(nClu)),... %xpos
-         's','MarkerFaceColor',[0,0.25,0],'Color',[0,0.25,0],'MarkerSize',9,...
+         's','MarkerFaceColor',[0,0.25,0],'Color',[0,0.25,0],'MarkerSize',8,...
          'LineWidth',1);
 ylabel('Predictive power salicylate (%)');
 xlabel('Predictive power baseline (%)');
@@ -236,8 +238,8 @@ ylim(ax3,[0,25])
 ax1 = subplot(row,col,[2,col+2]);
 plot(pairTable.strfnpp_base'*100,'-o','MarkerSize',4,'Color',[.7,.7,.7]);
 hold on; plot(pairTable.ctxtnpp_base'*100,'-o','MarkerSize',4,'Color',ctxtColor1);
-plot(mean(pairTable.strfnpp_base*100),'-sk','MarkerFaceColor','k','LineWidth',2,'MarkerSize',9);
-hold on; plot(mean(pairTable.ctxtnpp_base*100),'-s','Color',ctxtColor2,'MarkerFaceColor',ctxtColor2,'LineWidth',2,'MarkerSize',9);
+plot(mean(pairTable.strfnpp_base*100),'-sk','MarkerFaceColor','k','LineWidth',2,'MarkerSize',8);
+hold on; plot(mean(pairTable.ctxtnpp_base*100),'-s','Color',ctxtColor2,'MarkerFaceColor',ctxtColor2,'LineWidth',2,'MarkerSize',8);
 title('Baseline');
 xticks(1:nScales);xticklabels(scaleLbl);xlim(ax3.XAxis.Limits);%xlabel('Scale');
 ylim([0,maxnpp+10]);ylabel('STRF predictive power (%)');
@@ -247,17 +249,30 @@ ylim([0,maxnpp+10]);ylabel('STRF predictive power (%)');
 ax2 = subplot(row,col,[3,col+3]);
 plot(pairTable.strfnpp_sal'*100,'-o','MarkerSize',4,'Color',[.7,.7,.7]);
 hold on; plot(pairTable.ctxtnpp_sal'*100,'-o','MarkerSize',4,'Color',ctxtColor1);
-hold on; plot(mean(pairTable.strfnpp_sal*100),'-sk','MarkerFaceColor','k','LineWidth',2,'MarkerSize',9);
-hold on; plot(mean(pairTable.ctxtnpp_sal*100),'-s','Color',ctxtColor2,'MarkerFaceColor',ctxtColor2,'LineWidth',2,'MarkerSize',9);
+hold on; plot(mean(pairTable.strfnpp_sal*100),'-sk','MarkerFaceColor','k','LineWidth',2,'MarkerSize',8);
+hold on; plot(mean(pairTable.ctxtnpp_sal*100),'-s','Color',ctxtColor2,'MarkerFaceColor',ctxtColor2,'LineWidth',2,'MarkerSize',8);
 title('Salicylate');
 xticks(1:nScales);xticklabels(scaleLbl);xlim(ax3.XAxis.Limits);%xlabel('Scale');
 ylim([0,maxnpp+10]);%ylabel('Predictive power (%)');
 
-% TODO: subpanel labels ("A","B","C", etc.)
+% annotate panel letters
+MPlotLabels = [0.07,0.9,0.045,0.0929; ...
+    0.07,0.33,0.045,0.0929; ...
+    0.35,0.9,0.045,0.0929; ...
+    0.35,0.31,0.045,0.0929];
+PanelFontSize = 28; Font = 'Arial';
+
+An1 = annotation(fig,'textbox',MPlotLabels(1,:),'EdgeColor','none','String',"A",'FontSize',PanelFontSize,'FontName',Font);
+An2 = annotation(fig,'textbox',MPlotLabels(2,:),'EdgeColor','none','String',"B",'FontSize',PanelFontSize,'FontName',Font);
+An3 = annotation(fig,'textbox',MPlotLabels(3,:),'EdgeColor','none','String',"C",'FontSize',PanelFontSize,'FontName',Font);
+An4 = annotation(fig,'textbox',MPlotLabels(4,:),'EdgeColor','none','String',"D",'FontSize',PanelFontSize,'FontName',Font);
+
+% formating for saving as PDF
 fig.Renderer = 'painter';
 fig.PaperUnits = 'inches';
 fig.PaperSize = fig.Position(3:4)./96; %96 dpi
-saveas(fig,'.\Figures\Links\DRC_PP_Linearity.pdf')
+fig.PaperSize(1) = fig.PaperSize(1) - 1.5 ; % reduce margin
+saveas(fig,'.\Figures\Fig9_DRC_PP_Linearity.pdf')
 
 
 
