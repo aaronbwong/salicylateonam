@@ -6,20 +6,20 @@ addpath(genpath('src\'))
 %% Main figures
 
 % Figure 1
+Fig1_Spontaneous_ephys
 % to check
-
 
 % Figure 2
-% to check
+Fig2_FRA_minThr
 
 % Figure 3
 Fig3_FigS2_AM_example_units_ABW
 
 % Figure 4
-% to check
+Fig4_Population_salicylate_result
 
 % Figure 5
-% to check
+Fig5_Iceberg_effect
 
 % Figure 6
 Fig6_BehaviouralResults_Raw_Calc
