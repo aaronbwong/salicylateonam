@@ -1,5 +1,7 @@
 %% Figure 9 Van den Berg*, Wong* et al, 2024, iScience
 
+datapaths;
+
 Mice = [25,26,27,28,29,30,32,38,42,43,49,50,52,57,71,72,73,74];
 scales = {'pow','amp','dB40','dB2','dB','bin'};nScales = length(scales);
 scaleLbl = {'pow','amp','dB40','dB20','dB0','binary'};
@@ -18,13 +20,13 @@ phi = (-N:N)./12;
 tau = 5.*(0:M);
 
 context_reg_param = [6,0.5,0.5]';
-loadpath = ['Data\Neuro\DRC\',optstyle,'_',...
+loadpath = [DRCPath,filesep, optstyle,'_',...
     replace(mat2str(context_reg_param),{';',',','.','[',']'},{'_','_','x','',''}),...
     '\'];
 
 
 % read metadata for units
-salUnits = readtable('Data\salicylate_units.xlsx');
+salUnits = readtable([SumPath,filesep,'salicylate_units.xlsx']);
 
 % initiate progress bar
 progFig = uifigure('Position',[450,400,500,200]);
@@ -38,9 +40,9 @@ for m = 1:length(Mice)
     Mouse = num2str(Mice(m),'M%02.0f');
     d.Value = m/length(Mice);
     d.Message = 'Loading data';
-    load(['Data\Neuro\Spks\', Mouse, '\', Mouse '_SpkS.mat'],'cids','cpos');
+    load([SpkPath,filesep, Mouse, '\', Mouse '_SpkS.mat'],'cids','cpos');
     cids = cids';cpos = cpos';
-    load(['Data\Neuro\DRC\', Mouse, '_DRC_PSTH.mat'],'DRCSets');
+    load([DRCPath,filesep, Mouse, '_DRC_PSTH.mat'],'DRCSets');
     
     setNums = DRCSets;
     nSets = length(DRCSets);

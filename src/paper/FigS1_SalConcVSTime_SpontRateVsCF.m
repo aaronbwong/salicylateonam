@@ -3,7 +3,8 @@
 % FigS1A - Salicylate Concentration vs Time
 
 close all; clear; clc;
-load('.\Data\salicylate_concentration\salicylate_concentration_data.mat');
+datapaths
+load([ConcPath,filesep,'salicylate_concentration_data.mat']);
 % F = figure; 
 % a=gca;
 % plot(a,T,C,'ko','MarkerFaceColor','k');
@@ -35,12 +36,12 @@ saveas(F,'.\Figures\Links\FigS1A_salicylate_curve.pdf');
 %% FigS1B - Change in SpR against CF (for paper)
 
 clearvars; clc; close all;
-load('.\Data\Neuro\Population_spontaneous_rate.mat');
+datapaths
+load([PopPath,filesep,'Population_spontaneous_rate.mat']);
 dSFR = diff(SpR);
 
 
-load(".\Data\unitList_all.mat");
-ResPath = '.\Data\Neuro\FRA_analysis\';
+load([SumPath,filesep,'unitList_all.mat']);
 units = units(units(:,4)==1,:);
 mice = unique(units(:,1));
 nUnits = size(units,1);
@@ -51,7 +52,7 @@ BF = nan(nUnits,1);
 F = figure;
 cnt = 1;
 for k=1:nMice
-    load([ResPath 'M' num2str(mice(k)) '\M' num2str(mice(k)) '_FRA_both_data.mat'],'cids','FRA');
+    load([FRAPath filesep 'M' num2str(mice(k)) '\M' num2str(mice(k)) '_FRA_both_data.mat'],'cids','FRA');
     mCF = FRA.FRACF;
     mBF = FRA.FRABF;
     mouseUnits = units(units(:,1)==mice(k),:);
@@ -100,4 +101,4 @@ ylabel('SFR_{salic} / (SFR_{base} + SFR_{salic})');
 F.Renderer = 'painter';
 F.PaperUnits = 'inches';
 F.PaperSize = F.Position(3:4)./96; %96 dpi
-saveas(F,'.\Figures\Links\FigS1B_SponFR_CF.pdf');
+saveas(F,[FigPath,filesep,'FigS1B_SponFR_CF.pdf']);

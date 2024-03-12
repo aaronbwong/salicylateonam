@@ -1,7 +1,11 @@
 FRAPath = '.\Data\Neuro\FRA_analysis';
 AMPath = '.\Data\Neuro\AMn_analysis';
-PopPath = '.\Data\Neuro';
+PopPath = '.\Data\Neuro\Population';
 SumPath = '.\Data\Neuro';
 SpkPath = '.\Data\Neuro\Spks';
 BehPath = '.\Data\Behavior';
 FigPath = '.\Figures\Links';
+DRCPath = '.\Data\Neuro\DRC';
+PCAPath = '.\Data\PCA_SIM';
+SimPath = '.\Data\PCA_SIM';
+ConcPath = '.\Data\salicylate_concentration';

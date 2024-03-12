@@ -114,7 +114,7 @@ saveas(F,[FigPath,'\Fig2C_population_mThr_Salicylate.pdf']);
 %% Fig2DE minimum threshold as a function of CF (Supplementary figure 3)
 close all;
 
-load(['Data\unitList_all.mat']);
+load([SumPath,filesep,'unitList_all.mat']);
 units = units(units(:,4)==1,:);
 mice = unique(units(:,1));
 nUnits = size(units,1);

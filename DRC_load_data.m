@@ -5,6 +5,7 @@
 
 function [data,pairTable] = DRC_load_data()
 %
+datapaths
 % STRF parameters
 K = 61; J = 8;
 freq = logspace(log10(2),log10(64),K);
@@ -18,7 +19,7 @@ tau = 5.*(0:M);
 context_reg_param = [6,0.5,0.5]';
 optstyle = 'ASD';
 scale = 'amp';
-loadpath = ['.\Data\Neuro\DRC\',optstyle,'_',...
+loadpath = [DRCPath,filesep,optstyle,'_',...
     replace(mat2str(context_reg_param),{';',',','.','[',']'},{'_','_','x','',''}),...
     '\'];
 
@@ -26,7 +27,7 @@ Mice = [25,26,27,28,29,30,32,38,42,43,49,50,52,57,71,72,73,74];
 % Mice = [26,27,29,30,42,71,72];
 % Mice = [30];
 % read metadata for units
-salUnits = readtable('.\Data\salicylate_units.xlsx');
+salUnits = readtable([SumPath,filesep,'salicylate_units.xlsx']);
 
 % initiate progress bar
 multiWaitbar('CLOSEALL');
@@ -37,9 +38,9 @@ multiWaitbar('CLOSEALL');
 for m = 1:length(Mice)
     Mouse = num2str(Mice(m),'M%02.0f');
     multiWaitbar('Mouse', m/length(Mice));
-    load(['.\Data\Neuro\Spks\', Mouse, '\', Mouse '_SpkS.mat'],'cids','cpos');
+    load([SpkPath,filesep, Mouse, '\', Mouse '_SpkS.mat'],'cids','cpos');
     cids = cids';cpos = cpos';
-    load(['.\Data\Neuro\DRC\', Mouse, '_DRC_PSTH.mat'],'DRCSets');
+    load([DRCPath,filesep, Mouse, '_DRC_PSTH.mat'],'DRCSets');
     
     setNums = DRCSets;
     nSets = length(DRCSets);

@@ -2,7 +2,7 @@ clearvars; clc;
 close all;
 
 datapaths
-load('Data\unitList_all.mat');
+load([SumPath,filesep,'unitList_all.mat']);
 ResPath = [SpkPath,'\'];
 units = units(units(:,4)==1,:);
 mice = unique(units(:,1));

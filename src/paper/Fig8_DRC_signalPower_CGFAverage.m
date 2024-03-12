@@ -180,6 +180,7 @@ fig.PaperUnits = 'inches';
 fig.PaperSize = fig.Position(3:4)./96; %96 dpi
 saveas(fig,'Figures\Links\Figure8CD.pdf');
 %% REVISION
+% comparison between units that were mainly excited or inhibited by sound
 allBaseSTRF = cat(3,data.STRF{pairTable.basePairSel});
 allBasePRF = cat(3,data.PRF{pairTable.basePairSel});
 allSalSTRF = cat(3,data.STRF{pairTable.salPairSel});
@@ -302,70 +303,6 @@ ylabel('CGF weight')
 xlabel('Tau (ms)');
 set(gca,'FontSize',10);
 
-%%
-close all;
-% showSTRFs(allBasePRF(:,:,excUnits),num2cell(excUnits_Sal(excUnits)));sgtitle('PRF Base Exc')
-
-showSTRFs(allBaseSTRF(:,:,excUnits))%,num2cell(excUnits_Sal(excUnits)));
-sgtitle('Base Exc')
-showSTRFs(allBaseSTRF(:,:,inhUnits))%,num2cell(excUnits_Sal(inhUnits)));
-sgtitle('Base Inh')
-showSTRFs(allSalSTRF(:,:,excUnits))%,num2cell(excUnits_Sal(excUnits)));
-sgtitle('Sal Exc')
-showSTRFs(allSalSTRF(:,:,inhUnits))%,num2cell(excUnits_Sal(inhUnits)));
-sgtitle('Sal Inh')
-
-%%
-% required code from DRC_STRF_SalicylateCompare
-salColor = [.7,.7,0];
-baseColor = [0,0,0];
-FontSize = 12;
-fig = figure;
-fig.Position = [710,100,600,300];
-errorbar(mean(Tuning_Base(:,excUnits)./max(Tuning_Base(:,excUnits)),2,'omitnan'),...
-    std(Tuning_Base(:,excUnits)./max(Tuning_Base(:,excUnits))./sqrt(nExcUnits),[],2,'omitnan'),...
-    'MarkerFaceColor','k','Color',baseColor,'MarkerSize',6,'Marker','s'); hold on;
-errorbar(mean(Tuning_Base(:,inhUnits)./max(Tuning_Base(:,inhUnits)),2,'omitnan'),...
-    std(Tuning_Base(:,inhUnits)./max(Tuning_Base(:,inhUnits))./sqrt(nInhUnits),[],2,'omitnan'),...
-    'MarkerFaceColor','none','Color',baseColor,'MarkerSize',6,'Marker','o','LineStyle',':'); hold on;
-errorbar(mean(Tuning_Sal2(:,excUnits)./max(Tuning_Sal2(:,excUnits)),2,'omitnan'),...
-    std(Tuning_Sal2(:,excUnits)./max(Tuning_Sal2(:,excUnits))./sqrt(nExcUnits),[],2,'omitnan'),...
-    'MarkerFaceColor',salColor,'Color',salColor,'MarkerSize',6,'Marker','s'); hold on;
-errorbar(mean(Tuning_Sal2(:,inhUnits)./max(Tuning_Sal2(:,inhUnits)),2,'omitnan'),...
-    std(Tuning_Sal2(:,inhUnits)./max(Tuning_Sal2(:,inhUnits))./sqrt(nInhUnits),[],2,'omitnan'),...
-    'MarkerFaceColor','none','Color',salColor,'MarkerSize',6,'Marker','o','LineStyle',':'); hold on;
-ylabel('Normalized STRF weight');
-xticks(1:bandwidth/2:(2*bandwidth+1));
-xticklabels([-bandwidth:bandwidth/2:bandwidth]./12);
-xlabel('Freq. re. BF (oct)')
-set(gca,'FontSize',FontSize);
-% legend({'baseline','salicylate'},'location','best')
-lgd = legend({['baseline (exc; N = ',num2str(nExcUnits),')'],'salicylate (exc)', ['baseline (inh; N = ',num2str(nInhUnits),')'],'salicylate (inh)'},'Box','off', ...
-    'location','best');
-
-%% requires ExcInhAnalysis
-nUnits = size(pairTable,1);
-for ii = 1:nUnits
-    idx = salUnits.mouse == pairTable.mouse(ii) & salUnits.cids == pairTable.cids(ii);
-    pairTable.CF_base(ii) = salUnits.CF_Base(idx);
-    pairTable.CF_Sal(ii) = salUnits.CF_Sal(idx);
-    pairTable.minThr_Base(ii) = salUnits.minThr_Base(idx);
-    pairTable.minThr_Sal(ii) = salUnits.minThr_Sal(idx);
-    pairTable.ZeroRate_Base(ii) = salUnits.ZeroRate_Base(idx);
-    pairTable.ZeroRate_Sal(ii) = salUnits.ZeroRate_Sal(idx);
-end
-
-disp('Spont. firing shift')
-disp([' excited: ', num2str(mean(pairTable.ZeroRate_Sal(excUnits) - pairTable.ZeroRate_Base(excUnits)),'%.2f'),...
-    ' +/- ', num2str(std(pairTable.ZeroRate_Sal(excUnits) - pairTable.ZeroRate_Base(excUnits)),'%.2f')]);
-disp([' inhibited: ', num2str(mean(pairTable.ZeroRate_Sal(inhUnits) - pairTable.ZeroRate_Base(inhUnits)),'%.2f'),...
-    ' +/- ', num2str(std(pairTable.ZeroRate_Sal(inhUnits) - pairTable.ZeroRate_Base(inhUnits)),'%.2f')]);
-
-disp('Threshold shift')
-disp([' excited: ', num2str(mean(pairTable.minThr_Sal(excUnits) - pairTable.minThr_Base(excUnits),'omitnan'),'%.2f'),...
-    ' +/- ', num2str(std(pairTable.minThr_Sal(excUnits) - pairTable.minThr_Base(excUnits),'omitnan'),'%.2f')]);
-disp([' inhibited: ', num2str(mean(pairTable.minThr_Sal(inhUnits) - pairTable.minThr_Base(inhUnits),'omitnan'),'%.2f'),...
-    ' +/- ', num2str(std(pairTable.minThr_Sal(inhUnits) - pairTable.minThr_Base(inhUnits),'omitnan'),'%.2f')]);
 
 %% LOCAL Functions
 function setPRFAxis(h,xdir)

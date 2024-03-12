@@ -1,7 +1,7 @@
 %% load data
 clear; close all; clc;
 datapaths;
-AMResPath = [SumPath,'\AM_results_salicylate.mat'];
+AMResPath = [PopPath,'\AM_results_salicylate.mat'];
 load(AMResPath);
 
 MPlotLabels = [0.06,0.93,0.045,0.03; ...

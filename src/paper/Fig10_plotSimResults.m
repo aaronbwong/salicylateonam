@@ -1,22 +1,19 @@
 %% Figure 10 Van den Berg*, Wong* et al, 2024, iScience
 
-DataPathPCA = '.\Data\PCA_SIM\';
-DataPathSIM = '.\Data\PCA_SIM\';
-DataPathNeuro = '.\Data\Neuro\';
-DataPathBeh = '.\Data\Behavior\';
+datapaths;
 
 %% load results 
 % load results from PCA
-    load([DataPathPCA,'PCAResTable_Sal.mat'],'PCARes')
-    AMKSDs = matfile([DataPathNeuro,'AMKSDs_Sal.mat']);
+    load([PCAPath,filesep,'PCAResTable_Sal.mat'],'PCARes')
+    AMKSDs = matfile([SumPath,filesep,'AMKSDs_Sal.mat']);
     
 
 %  load results from Simulation if not present
 if ~exist('SimRes','var') || ~ismember('CDFDiff',fieldnames(SimRes))
-    load([DataPathSIM,'SIMResTableEval_Sal.mat'],'SimRes');
+    load([SimPath,filesep,'SIMResTableEval_Sal.mat'],'SimRes');
 end
 % load results from behavior
-results_lat = load([DataPathBeh,'salicylateResults.mat'],'mice', 'Thr_lat','uMF','uMD','uInt');
+results_lat = load([BehPath,filesep,'SalicylateBehaviorData.mat'],'mice', 'Thr_lat','uMF','uMD','uInt');
 i = 0;  
 uInt = results_lat.uInt;
     nInt = length(uInt);

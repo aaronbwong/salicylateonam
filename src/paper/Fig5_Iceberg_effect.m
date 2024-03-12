@@ -1,7 +1,7 @@
 %% load data
 clear; close all; clc;
 datapaths;
-load([SumPath,'\AM_results_salicylate.mat']);
+load([PopPath,'\AM_results_salicylate.mat']);
 
 MPlotLabels = [0.06,0.93,0.045,0.03; ...
     0.51,0.93,0.045,0.03; ...
@@ -78,7 +78,7 @@ An3 = annotation('textbox',MPlotLabels(3,:),'EdgeColor','none','String',"C",'Fon
 An4 = annotation('textbox',MPlotLabels(4,:),'EdgeColor','none','String',"D",'FontSize',20,'FontName','Arial','FontWeight','bold');
 
 % beeswarm of change in VS thr (only detected --> detected)
-load([SumPath,'\AM_results_salicylate.mat']);
+load([PopPath,'\AM_results_salicylate.mat']);
 nUnits = size(VSthr,4);
 UMd = [0.06 0.125 0.25 0.5 1]; NMd = length(UMd);
 UMf = [16 64 128 512]; NMf=length(UMf);
@@ -126,7 +126,7 @@ cnt = cnt+1; tilecnt = tilecnt +1;
 
 % beeswarm of change in FR thr (only detected --> detected)
 
-load([SumPath,'\AM_results_salicylate.mat']);
+load([PopPath,'\AM_results_salicylate.mat']);
 nUnits = size(VSthr,4);
 UMd = [0.06 0.125 0.25 0.5 1]; NMd = length(UMd);
 UMf = [16 64 128 512]; NMf=length(UMf);
