@@ -1,40 +1,22 @@
-addpath(genpath('../../../Software/Codes/Matlab/DABEST-Matlab/'));
-addpath(genpath('../../../Software/Codes/Matlab/misc_functions/'));
-SpontFluo = readtable('SpontFluoSalicylate.csv','Delimiter',',');
-%%
-dabest('SpontFluoSalicylate_Dabest.csv')
 
-%%
-dabest('SpontFluoSalicylate_Dabest.csv','Paired')
+datapaths;
 
-%%
-ss_PreSal = dabest('SpontFluoSalicylate_Dabest_PreSalOnly.csv','Paired');
-ylabel('Effect size');
-
-ss_PrePost = dabest('SpontFluoSalicylate_Dabest_PrePostOnly.csv','Paired');
-ylabel('Effect size');
-
-ss_SalPost = dabest('SpontFluoSalicylate_Dabest_SalPostOnly.csv','Paired');
-ylabel('Effect size');
-
-close all
-
-%% combine results
-ss = [ss_PreSal;ss_SalPost;ss_PrePost];
-[~,idx] = unique(ss(:,1),'stable');
-ss = ss(idx,:);
+SpontFluo = readtable(fullfile(ImgPath,'SpontFluoSalicylate.csv'),'Delimiter',',');
 data = [SpontFluo.GR_pre,SpontFluo.GR_sal,SpontFluo.GR_post];
+ss = readtable(fullfile(ImgPath,'SpontFluoSalicylate_CI.csv'),'Delimiter',',');
 av = ss.Value(ismember(ss.Group,{'pre','sal','post'}));
-cis = ss.CIs(ismember(ss.Group,{'pre','sal','post'}),:);
+cis = [ss.CIs_1(ismember(ss.Group,{'pre','sal','post'}),:),...
+        ss.CIs_2(ismember(ss.Group,{'pre','sal','post'}),:)];
 sd = std([SpontFluo.GR_pre,SpontFluo.GR_sal,SpontFluo.GR_post;])';
-% er = cis-av; er(:,2) = -er(:,2);
-er = [sd,sd];
+er = cis-av; er(:,2) = -er(:,2);
+% er = [sd,sd];
 
 avDiff = ss.Value(ismember(ss.Group,{'sal minus pre','post minus pre'}));
-cisDiff = ss.CIs(ismember(ss.Group,{'sal minus pre','post minus pre'}),:);
+cisDiff = [ss.CIs_1(ismember(ss.Group,{'sal minus pre','post minus pre'}),:),...
+            ss.CIs_2(ismember(ss.Group,{'sal minus pre','post minus pre'}),:)];
 sdDiff = std([(SpontFluo.GR_sal - SpontFluo.GR_pre) , (SpontFluo.GR_post - SpontFluo.GR_pre)])';
-% erDiff = cisDiff-avDiff; erDiff(:,2) = -erDiff(:,2);
-erDiff = [sdDiff,sdDiff];
+erDiff = cisDiff-avDiff; erDiff(:,2) = -erDiff(:,2);
+% erDiff = [sdDiff,sdDiff];
 
 
 %% plot combined results
@@ -69,5 +51,5 @@ ax1.Position([1,3]) = ax2.Position([1,3]);
 linkaxes([ax1,ax2],'x');
 xlim([ax1,ax2],[.5,3.5])
 
-setupPDFRes(fig);
-saveas(fig,'SpontFluoFig.pdf')
+setPDFRes(fig);
+saveas(fig,fullfile(FigPath,'Fig1D_SpontFluoFig.pdf'))

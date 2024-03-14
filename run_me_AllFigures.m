@@ -1,4 +1,14 @@
-%% 
+%% This script generates panels of figures from source data
+% Please make sure the folder "Data" from the source data is extracted 
+% directly at the root directory of the github code, so that it contains:
+% github_dir\Data\
+% github_dir\Data\Neuro\
+% github_dir\Data\Behavior\
+%  etc.
+% and from the code repository: 
+% github_dir\run_me_AllFigures.m
+% github_dir\src\paper
+%  etc.
 
 addpath('functions\')
 addpath(genpath('src\'))
