@@ -33,24 +33,25 @@ This is the code to generate Figure panels for the manuscript "Sodium salicylate
 
 1) Dependencies
 
+ - Obtain raw data files and extract the folder /Data/ in the root directory of this repository
  - Matlab (version 2019a or later)
  - R and RStudio (3.6.x)
-  Install the following R packages:
-
-	packages <- c("data.table", "ggplot2")
-
+   - Install the following R packages ("here","lme4","nlme","plyr","multcomp") or run the following code in the R console:
+	```
+	packages <- c("here","lme4","nlme","plyr","multcomp")
 	install.packages(packages)
-
-- Obtain raw data files and put them into /Data/
+	```
 
 2) Directory structure
 
-/Data/ 			Stores raw and analyzed data
-/Figures/ 			Stores illustrator files to assemble final figures.
-/src/paper      Stores codes to generate figure panels and illustrations
-/functions/     
+  - `/Data/`  Stores raw and analyzed data.
+  - `/Figures/`   Stores illustrator files to assemble final figures.
+  - `/src/paper` Stores codes to generate figure panels and illustrations.
+  - `/src/statistics` Stores codes for statistics related to linear mixed models (Fig .
+  - `/functions/` Stores miscellaneous functions needed to run the code
 
 3) How to run the project
 
-Extract source data into the folder `/Data/`
-Run the script `run_me_AllFigures.m` in Matlab, with the root directory as the working directory.
+ - Extract the folder `/Data/` from source data into the root directory
+ - Run the script `run_me_AllFigures.m` in Matlab, with the root directory as the working directory.
+ - Linear mixed-effect model statistics: Run the R markdown file `src\statistics\StatisticsSalicylate_2022-09-15.rmd` in R-studio. 
