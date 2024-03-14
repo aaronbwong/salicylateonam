@@ -24,6 +24,7 @@ SumPath = fullfile(rootpath,'Data\Neuro');
 SpkPath = fullfile(rootpath,'Data\Neuro\Spks');
 BehPath = fullfile(rootpath,'Data\Behavior');
 FigPath = fullfile(rootpath,'Figures\Links');
+FullFigPath = fullfile(rootpath,'Figures');
 DRCPath = fullfile(rootpath,'Data\Neuro\DRC');
 PCAPath = fullfile(rootpath,'Data\PCA_SIM');
 SimPath = fullfile(rootpath,'Data\PCA_SIM');

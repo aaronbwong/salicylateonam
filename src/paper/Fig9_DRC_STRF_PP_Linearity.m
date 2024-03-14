@@ -274,7 +274,7 @@ fig.Renderer = 'painter';
 fig.PaperUnits = 'inches';
 fig.PaperSize = fig.Position(3:4)./96; %96 dpi
 fig.PaperSize(1) = fig.PaperSize(1) - 1.5 ; % reduce margin
-saveas(fig,'.\Figures\Fig9_DRC_PP_Linearity.pdf')
+saveas(fig,fullfile(FullFigPath,'Fig9_DRC_PP_Linearity.pdf'))
 
 
 

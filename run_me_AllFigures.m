@@ -17,7 +17,7 @@ addpath(genpath('src\'))
 
 % Figure 1
 Fig1_Spontaneous_ephys
-% to check
+Fig1D_PlotSpontFluoData
 
 %% Figure 2
 Fig2_FRA_minThr
