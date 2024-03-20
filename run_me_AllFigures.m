@@ -23,7 +23,7 @@ Fig1D_PlotSpontFluoData
 Fig2_FRA_minThr
 
 %% Figure 3
-Fig3_FigS2_AM_example_units_ABW
+Fig3_FigS2_AM_example_units
 
 %% Figure 4
 Fig4_Population_salicylate_result
